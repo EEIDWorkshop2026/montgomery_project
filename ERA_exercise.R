@@ -14,6 +14,7 @@ library(tidyverse)
 library(ggpubr)
 library(tidyterra)
 library(rnaturalearthhires)
+library(pkgbuild)
 
 
 
@@ -73,3 +74,36 @@ request <- list(
   "area" = "49.959133/-5.715647/50.922991/-4.180043"
 )
 wf_request(request = request)
+
+
+
+
+test_r<-rast("data_stream-mnth.nc")
+plot(test_r[[1]])
+
+## If you used the Cornwall bounding box, you 
+## should see a very large pixel version of Cornwall
+
+## Extracting that one time slice and changing it to a 
+## dataframe for plotting reasons
+tr<-rast(test_r[[1]])
+df <- as.data.frame(test_r[[1]], xy = TRUE)
+
+## Rename columns if needed 
+## (e.g., if the variable name is "temp")
+colnames(df) <- c("x", "y", "Temp (K)")
+
+## Making both our vector map of Cornwall and our dataframe
+## into plotable objects for ggplot
+cw<-vect(cornwall_ne)
+df2<-rast(df)
+
+
+ggplot()+
+  geom_raster(data=df2, aes(x = x, y = y, fill = `Temp (K)`)) +
+  scale_fill_viridis_c(na.value=NA) +
+  geom_sf(data = cw, color="black",
+          fill=NA, size=0.25)+
+  theme_bw()
+
+
