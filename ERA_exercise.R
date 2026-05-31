@@ -13,6 +13,7 @@ library(stars)
 library(tidyverse)
 library(ggpubr)
 library(tidyterra)
+library(rnaturalearthhires)
 
 
 
